@@ -1,0 +1,30 @@
+{
+	"name": "MovDataToBlog",
+	"properties": {
+		"activities": [
+			{
+				"name": "MoveDataBLOB",
+				"type": "SqlServerStoredProcedure",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"storedProcedureName": "sp_executesql",
+					"storedProcedureParameters": {
+						"statement": {
+							"value": "Declare @execution_id bigint\nEXEC [SSISDB].[catalog].[create_execution] @package_name=N'Package.dtsx', @execution_id=@execution_id OUTPUT, @folder_name=N'MOveDataToSQLDB', @project_name=N'MoveDataSQLToBlob', @use32bitruntime=False, @reference_id=Null, @useanyworker=True, @runinscaleout=True\nSelect @execution_id\nDECLARE @var0 smallint = 1\nEXEC [SSISDB].[catalog].[set_execution_parameter_value] @execution_id,  @object_type=50, @parameter_name=N'LOGGING_LEVEL', @parameter_value=@var0\nEXEC [SSISDB].[catalog].[start_execution] @execution_id,  @retry_count=0"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "linkedService1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		]
+	}
+}
